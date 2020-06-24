@@ -28,7 +28,9 @@ jobs:
         run: yarn install
 
       - name: Run test and generate coverage report
-        run: yarn run codecov
+        run: yarn test --watchAll=false -- --coverage
 
-      # - name: Code coverage
-      #   run: bash <(curl -s https://codecov.io/bash)
+      - name: Code coverage
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: 09e25e60-56ac-40ee-8273-9e3089be07c0
