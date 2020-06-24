@@ -28,7 +28,7 @@ jobs:
         run: yarn install
 
       - name: Run test and generate coverage report
-        run: yarn test:coverage:ci
+        run: yarn run codecov
 
-      - name: Code coverage
-        run: bash <(curl -s https://codecov.io/bash)
+      # - name: Code coverage
+      #   run: bash <(curl -s https://codecov.io/bash)
