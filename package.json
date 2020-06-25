@@ -61,7 +61,6 @@
     ]
   },
   "jest": {
-    "collectCoverage": true,
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
