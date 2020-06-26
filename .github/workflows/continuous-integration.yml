@@ -10,43 +10,33 @@ jobs:
   test:
     name: CI
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
       - uses: actions/checkout@v1
 
-      - name: Cache node modules
-        uses: actions/cache@v1
-        # id: cache
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-yarn-
 
-      - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies if not Cached
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn install
 
-      - name: Install Dependencies
-        run: yarn install
+      # - name: Install Dependencies
+      #   run: yarn install
 
       - name: Run test and generate coverage report
         run: yarn test --coverage --watchAll=false
 
-      - name: Run the tests and generate coverage report
-        run: codecov/codecov-action@v1
-  
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
-
-      # - name: Code coverage
-      #   run: bash <(curl -s https://codecov.io/bash)
-      #   env:
-      #     CODECOV_TOKEN: 09e25e60-56ac-40ee-8273-9e3089be07c0
+      - name: Code coverage
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: 09e25e60-56ac-40ee-8273-9e3089be07c0
