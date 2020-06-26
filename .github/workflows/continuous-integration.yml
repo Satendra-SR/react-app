@@ -10,7 +10,7 @@ jobs:
   test:
     name: CI
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v1
 
@@ -26,13 +26,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Dependencies if not Cached
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn install
+      # - name: Install Dependencies if not Cached
+      #   if: steps.yarn-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     yarn install
 
-      # - name: Install Dependencies
-      #   run: yarn install
+      - name: Install Dependencies
+        run: yarn install
 
       - name: Run test and generate coverage report
         run: yarn test --coverage --watchAll=false
