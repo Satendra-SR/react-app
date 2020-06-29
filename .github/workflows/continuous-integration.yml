@@ -35,7 +35,7 @@ jobs:
         run: yarn install
 
       - name: Run test and generate coverage report
-        run: yarn test --coverage --watchAll=false
+        run: set CI=true && yarn test --coverage --watchAll=false
 
       - name: Code coverage
         run: bash <(curl -s https://codecov.io/bash)
