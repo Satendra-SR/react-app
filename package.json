@@ -72,7 +72,8 @@
       "!src/index.tsx"
     ],
     "coverageReporters": [
-      "text"
+      "text",
+      "html"
     ]
   },
   "devDependencies": {
