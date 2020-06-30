@@ -6,30 +6,53 @@ on:
     pull_request:
       branches: [ master ]
 
+env:
+  YARN_MODULES_CACHE_KEY: v1
+  YARN_PACKAGE_CACHE_KEY: v1
+  YARN_CACHE_FOLDER: .cache/yarn
+  NODE_VERSION: 12
+
 jobs:
   test:
     name: CI
     runs-on: ubuntu-latest
 
+    # strategy:
+    #   matrix:
+    #     node-version: [12]
+
     steps:
       - uses: actions/checkout@v1
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Cache Yarn packages
+        id: yarn_cache_packages
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ env.YARN_CACHE_FOLDER }}
+          key: ${{ env.YARN_PACKAGE_CACHE_KEY }}-${{ runner.os }}-yarn_cache-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ env.YARN_PACKAGE_CACHE_KEY }}-${{ runner.os }}-yarn_cache-
 
-      - name: Install Dependencies if not Cached
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: |
-          yarn install
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ env.YARN_MODULES_CACHE_KEY }}-${{ runner.os }}-${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ env.YARN_MODULES_CACHE_KEY }}-${{ runner.os }}-${{ env.NODE_VERSION }}-yarn-
+
+      # Clear caches on cache miss, otherwise they will grow indefinitely
+      - name: Clear yarn cache
+        if: steps.yarn_cache_packages.outputs.cache-hit != 'true'
+        run: yarn cache clean
+
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile --link-duplicates
+
+      # - name: Install Dependencies if not Cached
+      #   if: steps.yarn-cache.outputs.cache-hit != 'true'
+      #   run: |
+      #     yarn install
 
       # - name: Install Dependencies
       #   run: yarn install
