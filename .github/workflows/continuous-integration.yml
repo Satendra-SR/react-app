@@ -17,10 +17,6 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
 
-    # strategy:
-    #   matrix:
-    #     node-version: [12]
-
     steps:
       - uses: actions/checkout@v1
 
@@ -41,22 +37,11 @@ jobs:
           restore-keys: |
             ${{ env.YARN_MODULES_CACHE_KEY }}-${{ runner.os }}-${{ env.NODE_VERSION }}-yarn-
 
-      # Clear caches on cache miss, otherwise they will grow indefinitely
-      # - name: Clear yarn cache
-      #   if: steps.yarn_cache_packages.outputs.cache-hit != 'true'
-      #   run: yarn cache clean
-
-      # - name: Installing dependencies
-      #   run: yarn install --frozen-lockfile --link-duplicates --network-concurrency 1
-
       - name: Install Dependencies if not Cached
         if: steps.yarn_cache_packages.outputs.cache-hit != 'true'
         run: |
           yarn cache clean
           yarn install
-
-      # - name: Install Dependencies
-      #   run: yarn install
 
       - name: Run test and generate coverage report
         run: yarn test --coverage --watchAll=false
