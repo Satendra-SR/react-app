@@ -1,11 +1,12 @@
 # Glific - Two Way Open Source Communication Platform
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-![](https://github.com/glific/glific-frontend/workflows/Continuous%20Integration/badge.svg)
+![](https://github.com/Satendra-SR/react-app-frontend/workflows/Continuous%20Integration/badge.svg)
+[![Code coverage badge](https://img.shields.io/codecov/c/github/Satendra-SR/react-app/master.svg)](https://codecov.io/gh/Satendra-SR/react-app/branch/master)
 
 Frontend interface built using React.
 
-**Note: First you will need to setup the backend application from this repo: https://github.com/glific/glific**
+**Note: First you will need to setup the backend application from this repo: https://github.com/Satendra-SR/react-app**
 
 ## Available Scripts
 
