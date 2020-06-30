@@ -47,7 +47,7 @@ jobs:
         run: yarn cache clean
 
       - name: Installing dependencies
-        run: yarn install --frozen-lockfile --link-duplicates
+        run: yarn install --frozen-lockfile --link-duplicates --network-concurrency 1
 
       # - name: Install Dependencies if not Cached
       #   if: steps.yarn-cache.outputs.cache-hit != 'true'
